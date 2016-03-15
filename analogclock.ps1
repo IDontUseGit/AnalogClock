@@ -19,39 +19,46 @@ $Render_Back =
 {
     $g.Clear($form.backcolor)
     
-    $pen.width = 30
-    $pen.color = [system.drawing.color]::fromargb(200, 200, 200) 
+    $pen.width = 35
+    $pen.color = [system.drawing.color]::fromargb(225, 225, 225) 
     $pen.alignment  = [system.drawing.drawing2d.penalignment]::inset  
     
     $g.DrawEllipse($pen, 0, 0, $width, $height) 
     
-    $pen.width = 1
+    $pen.width = 3
+    $pen.color = [system.drawing.color]::fromargb(0, 0, 0) 
+    $pen.alignment  = [system.drawing.drawing2d.penalignment]::outset  
+    
+    $g.DrawEllipse($pen, 0, 0, $width, $height)
+    
+    $pen.width = 3
     $pen.color = [system.drawing.color]::fromargb(0, 0, 0) 
     $pen.alignment  = [system.drawing.drawing2d.penalignment]::center
     
-    $dx = $width / 2 - 15
-    $dy = 0 
-    $pos = new-object system.drawing.pointf -argumentlist @($dx, $dy)
-    $text = "12"
-    $g.drawstring($text, $font, $brush, $pos)
-    
-    $dx = $width - 15
-    $dy = $height / 2 - 15 
-    $pos = new-object system.drawing.pointf -argumentlist @($dx, $dy)
-    $text = "3"
-    $g.drawstring($text, $font, $brush, $pos)
-    
-    $dx = $width / 2 - 15
-    $dy = $height - 25
-    $pos = new-object system.drawing.pointf -argumentlist @($dx, $dy)
-    $text = "6"
-    $g.drawstring($text, $font, $brush, $pos)
-    
-    $dx = 0 
-    $dy = $height / 2 - 15
-    $pos = new-object system.drawing.pointf -argumentlist @($dx, $dy)
-    $text = "9"
-    $g.drawstring($text, $font, $brush, $pos)   
+    #проставляем все часы
+    for($i=1; $i -le 12; $i++)
+    {
+        $ang = 2.0 * [system.math]::PI * $i / 12.0
+        
+        $dx0 = (($width - 10) / 2 * [system.math]::sin($ang)) + $centerx
+        $dy0 = (-($height - 10) / 2 * [system.math]::cos($ang)) + $centery
+        $dx1 = (($width - 45) / 2 * [system.math]::sin($ang)) + $centerx
+        $dy1 = (-($height - 45) / 2 * [system.math]::cos($ang)) + $centery
+        $dx2 = (($width - 80) / 2 * [system.math]::sin($ang)) + $centerx
+        $dy2 = (-($height - 80) / 2 * [system.math]::cos($ang)) + $centery
+        
+        $g.DrawLine($pen, $dx1, $dy1, $dx0, $dy0)
+        
+        $pos = new-object system.drawing.pointf -argumentlist @(($dx2-12), ($dy2-12))
+        
+        if ($i -le 6)
+            {$text=" "}
+        else
+            {$text=""}
+        $text = $text + $i
+        
+        $g.drawstring($text, $font, $brush, $pos)
+    }
 }
 
 $Render_Face =
