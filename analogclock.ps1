@@ -6,17 +6,28 @@ $centery = 150
 $form = new-object system.windows.forms.form
 $form.height = 512
 $form.width = 512
-$g = $form.CreateGraphics()
+$bitmap = new-object system.drawing.bitmap -argumentlist @(512, 512)
+#$g = $form.CreateGraphics()
+$g = [system.drawing.graphics]::fromimage($bitmap)
 $g.translatetransform(50, 50)
 $timer = new-object system.windows.forms.timer
-$pen = [system.drawing.pens]::black
+$pen = new-object system.drawing.pen -argumentlist @([system.drawing.color]::black, 1)
 $brush = [system.drawing.brushes]::black
 $font = new-object System.Drawing.Font -argumentlist @("Microsoft Sans Serif", 14)
 
 $Render_Back = 
 {
     $g.Clear($form.backcolor)
+    
+    $pen.width = 30
+    $pen.color = [system.drawing.color]::fromargb(200, 200, 200) 
+    $pen.alignment  = [system.drawing.drawing2d.penalignment]::inset  
+    
     $g.DrawEllipse($pen, 0, 0, $width, $height) 
+    
+    $pen.width = 1
+    $pen.color = [system.drawing.color]::fromargb(0, 0, 0) 
+    $pen.alignment  = [system.drawing.drawing2d.penalignment]::center
     
     $dx = $width / 2 - 15
     $dy = 0 
@@ -53,26 +64,49 @@ $Render_Face =
     $mang = 2.0 * [system.math]::PI * ($m + $s / 60.0) / 60.0
     $hang = 2.0 * [system.math]::PI * ($h + $m / 60.0) / 12.0
     
+    $pen.width = 10
+    $pen.color = [system.drawing.color]::fromargb(64, 64, 64) 
+    $pen.alignment  = [system.drawing.drawing2d.penalignment]::center
+    
     #часовая стрелка
     $cx = ((($width - 100) / 2)  * [system.math]::sin($hang)) + $centerx
     $cy = ((-($height - 100) / 2) * [system.math]::cos($hang)) + $centery
     $g.DrawLine($pen, $centerx, $centery, $cx, $cy)
+    
+    $pen.width = 5
+    $pen.color = [system.drawing.color]::fromargb(64, 64, 64) 
     
     #минутная стрелка
     $cx = ((($width - 50) / 2)  * [system.math]::sin($mang)) + $centerx
     $cy = ((-($height - 50) / 2) * [system.math]::cos($mang)) + $centery
     $g.DrawLine($pen, $centerx, $centery, $cx, $cy)
     
+    $pen.width = 3
+    $pen.color = [system.drawing.color]::red
+    
     #секундная стрелка
     $cx = ((($width - 15) / 2)  * [system.math]::sin($sang)) + $centerx
     $cy = ((-($height - 15) / 2) * [system.math]::cos($sang)) + $centery
     $g.DrawLine($pen, $centerx, $centery, $cx, $cy)
+    
+    #гвоздик
+    $g.FillEllipse($brush, 0 + $centerx - 7, 0 + $centery - 7, 15, 15)
+    
+    $pen.width = 1
+    $pen.color = [system.drawing.color]::black
+}
+
+$Render_Screen = 
+{
+    $fgraph = $form.CreateGraphics()
+    $fgraph.DrawImage($bitmap, 0, 0)
 }
 
 $Render = 
 {
     &$Render_Back
     &$Render_Face
+    &$Render_Screen
 }
 
 $timer.enabled = $true
