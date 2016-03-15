@@ -54,18 +54,18 @@ $Render_Face =
     $hang = 2.0 * [system.math]::PI * ($h + $m / 60.0) / 12.0
     
     #часовая стрелка
-    $cx = (25 * [system.math]::sin($mang))
-    $cy = (-25 * [system.math]::cos($mang))
+    $cx = ((($width - 100) / 2)  * [system.math]::sin($hang)) + $centerx
+    $cy = ((-($height - 100) / 2) * [system.math]::cos($hang)) + $centery
     $g.DrawLine($pen, $centerx, $centery, $cx, $cy)
     
     #минутная стрелка
-    $cx = (15 * [system.math]::sin($hang))
-    $cy = (-15 * [system.math]::cos($hang))
+    $cx = ((($width - 50) / 2)  * [system.math]::sin($mang)) + $centerx
+    $cy = ((-($height - 50) / 2) * [system.math]::cos($mang)) + $centery
     $g.DrawLine($pen, $centerx, $centery, $cx, $cy)
     
     #секундная стрелка
-    $cx = (25 * [system.math]::sin($sang))
-    $cy = (-25 * [system.math]::cos($sang))
+    $cx = ((($width - 15) / 2)  * [system.math]::sin($sang)) + $centerx
+    $cy = ((-($height - 15) / 2) * [system.math]::cos($sang)) + $centery
     $g.DrawLine($pen, $centerx, $centery, $cx, $cy)
 }
 
