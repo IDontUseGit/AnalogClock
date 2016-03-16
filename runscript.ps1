@@ -1,6 +1,6 @@
 #до запуска
-set-executionpolicy remotesigned
+#set-executionpolicy remotesigned
 #запуск
-&"analogclock.ps1"
+&"F:\Git\AnalogClock\analogclock.ps1"
 #после завершения
-set-executionpolicy restricted
+#set-executionpolicy restricted
