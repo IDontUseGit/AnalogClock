@@ -1,12 +1,14 @@
-$width = 300
-$height = 300
-$centerx = 150
-$centery = 150
+param([int]$locx = 768, [int]$locy = 64, [int]$width = 200, [int]$height = 200)
+
+$centerx = $width / 2
+$centery = $height / 2 
 
 $form = new-object system.windows.forms.form
-$form.height = 512
-$form.width = 512
-$bitmap = new-object system.drawing.bitmap -argumentlist @(512, 512)
+$form.height = $height + $centery 
+$form.width = $width + $centerx
+$form.StartPosition = [system.windows.forms.formstartposition]::manual
+$form.location = new-object system.drawing.point -argumentlist @($locx, $locy)
+$bitmap = new-object system.drawing.bitmap -argumentlist @(($width + $centerx), ($height + $centery))
 #$g = $form.CreateGraphics()
 $g = [system.drawing.graphics]::fromimage($bitmap)
 $g.translatetransform(50, 50)
@@ -23,7 +25,7 @@ $Render_Back =
     $pen.color = [system.drawing.color]::fromargb(200, 200, 200) 
     $pen.alignment  = [system.drawing.drawing2d.penalignment]::inset  
     
-    $g.DrawEllipse($pen, 0, 0, $width, $height) 
+    $g.DrawEllipse($pen, $centerx - $width / 2, $centery - $height / 2, $width, $height) 
     
     $pen.width = 1
     $pen.color = [system.drawing.color]::fromargb(0, 0, 0) 
@@ -113,7 +115,6 @@ $timer.enabled = $true
 $timer.interval = 45
 $timer.add_tick($Render)
 
-#$form.controls.add($timer)
 $form.ShowDialog()
 
 $timer.enabled = $false
